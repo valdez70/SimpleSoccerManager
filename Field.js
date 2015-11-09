@@ -6,10 +6,7 @@ class Field {
 		this._length=_length;
 	 	this._width=_width;
 	 	this.margin=_length/100;
-	 	
-	 	
-
-	 	
+	 		 	
 
 
 	 	this.midx=xPos+_width/2;
@@ -33,15 +30,34 @@ class Field {
 
 	 	this.fieldRegions=new Array();
 	 	this.createFieldRegions();
-
-	
-	 	this.ball=new Ball(xPos, yPos,_width/100, _width/100,this);
 	 	
 
-	 	this.teamA=new Team(new Formation(new Array(4,3,3)),this,"A","left",new Array(255,255,0));
-	 	this.teamB=new Team(new Formation(new Array(3,5,2)),this,"B","right",new Array(255,0,0));
+	
+	 	//this.ball=new Ball(500, 200,_width/100, _width/100,this);
+	 	this.ball=new Ball(this.midx, this.midy,_width/100, _width/100,this);
+
+	 	
+
+	 	this.teamA=new Team(new Formation(new Array(4,5,1)),this,"BRA","left",new Array(255,255,0),this.leftPost);
+	 	this.teamB=new Team(new Formation(new Array(4,4,2)),this,"ARG","right",new Array(0,10,255),this.rightPost);
+	 	this.teamA.mode="voice";
+	 	this.teamB.mode="computer";
+	 	this.lastPlayerInPossesion=this.teamA.players[10];
+	 	this.assignOpposition();
+	 	this.allPlayers=[];
+	 	for (var i = this.teamA.players.length - 1; i >= 0; i--) {
+	 		this.allPlayers.push(this.teamA.players[i]);
+	 	};
+	 	for (var i = this.teamB.players.length - 1; i >= 0; i--) {
+	 		this.allPlayers.push(this.teamB.players[i]);
+	 	};
 
 
+
+	}
+	assignOpposition(){
+		this.teamB.opposition=this.teamA;
+		this.teamA.opposition=this.teamB;
 	}
  	
 
@@ -54,11 +70,10 @@ class Field {
  		this.createFieldMargin();
  		this.createPosts(); 
  		this.createBoxes();
- 		//this.player.animate();
- 		//this.player2.animate();
  		this.teamA.animate();
  		this.teamB.animate();
  		this.ball.animate();
+ 		this.setLastPlayerInPossesion(this.getLastPlayerInPossession());
 
  		
  		
@@ -132,12 +147,11 @@ class Field {
 		var yIndexBase9=0;
 
 	 	for(var i=0; i<81; i++){
-	 		// var xIndexBase8=(fieldRegionxPos-this.xPos)/8;
-	 		// var yIndexBase8=(fieldRegionyPos-this.yPos)/8;
+	 
 
-	 		var newFieldRegion= new FieldRegion(fieldRegionxPos,fieldRegionyPos,fieldRegionWidth,fieldRegionLength,xIndexBase9,yIndexBase9);
+	 		var newFieldRegion= new FieldRegion(fieldRegionxPos,fieldRegionyPos,fieldRegionWidth,fieldRegionLength,xIndexBase9,yIndexBase9,this);
 	 		this.fieldRegions.push(newFieldRegion);
-	 		//console.log(newFieldRegion);
+	 	
 
 	 		if(yIndexBase9<8){
 	 			yIndexBase9++;
@@ -154,6 +168,24 @@ class Field {
 
 
 	 	}
-	 	//console.log(this.fieldRegions);
+	 	
 	}
+
+		getLastPlayerInPossession(){
+		for (var i = this.allPlayers.length - 1; i >= 0; i--) {
+			if (this.allPlayers[i].hasBall()) {
+				return this.allPlayers[i];
+			};
+		};
+		return 1;
+	}
+
+	setLastPlayerInPossesion(player){
+		if (player!=1) {
+			this.lastPlayerInPossesion=player;
+		};
+
+	}
+
+
  }
