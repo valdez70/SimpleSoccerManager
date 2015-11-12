@@ -15,6 +15,7 @@ class Game{
 		this.animationTime=0;
 		this.state="KICKOFF";
 		this.teamAmorale=0;
+		this.cumulativeTimeDelay=0;
 		//this.teamB.setState("kickoff");
 		//this.teamA.setState("kickoff");
 		
@@ -29,7 +30,11 @@ class Game{
 		rect(this.field.xPos-this.field._length/20,this.field.yPos-this.field._length/20,this.field._width+this.field._length/10,11*this.field._length/10);
 		pop();
 		this.timeElapsed=millis();
-		this.gameTime=Math.floor(this.timeElapsed/2000);
+		if(!this.gameEvent()){
+		this.gameTime=Math.floor(this.timeElapsed/2000)-Math.floor(this.cumulativeTimeDelay/2000);
+		}
+		
+		
 		this.field.animate();
 		this.displayScore();
 		this.displayTime();
@@ -70,17 +75,18 @@ class Game{
 		push();
 		fill(0);
 		textSize(width/50);
-		text(this.teamA.mindset, width/5, 9*height/10);
-		//text(this.teamA.nearestPlayerToBall().position, width/5, 9*height/10);
+		//text(this.teamA.mindset, width/5, 9*height/10);
+		text(this.teamA.nearestPlayerToBall().position, width/5, 9*height/10);
 		// fill(this.teamB.colors);
-		text(this.teamB.mindset, 3.8*width/5, 9*height/10)
-		//text(this.teamB.nearestPlayerToBall().position, 3.8*width/5, 9*height/10);
+		//text(this.teamB.mindset, 3.8*width/5, 9*height/10)
+		text(this.teamB.nearestPlayerToBall().position, 3.8*width/5, 9*height/10);
 		pop();
 	}
 
 	stateMachine(){
 		this.updateState();
 		this.updateScores();
+		
 		this.animate();
 		if (this.gameEvent()) {
 			this.ball.stop();
@@ -89,12 +95,10 @@ class Game{
 		}
 		else if(!this.isFullTime()){
 			this.animationTime=0;
-			//this.setTeamsToPlay();
 			
-
 			
+			}
 
-		}
 		else{
 
 
@@ -164,7 +168,7 @@ class Game{
 	}
 
 	isFullTime(){
-		return this.gameTime==90;
+		return this.gameTime>=90;
 	}
 
 	isStarting(){
@@ -178,9 +182,6 @@ class Game{
 
 	goalAnimation(){
 		
-		
-		//console.log(animationTime)
-		//if(){
 			push();
 			textSize(this.field._width/30);
 			fill(255);
@@ -190,8 +191,6 @@ class Game{
 				this.allPlayers[i].stop();
 			};
 			pop();
-		//}
-		//else{
 			this.ball.xPos=this.field.midx;
 			this.ball.yPos=this.field.midy;
 			for (var i = this.allPlayers.length - 1; i >= 0; i--) {
@@ -200,11 +199,12 @@ class Game{
 			};
 			
 			this.ball.stop();
-		//}
+		
 	}
 
 	end(){
 		this.setTeamsToNeutral();
+		this.gameTime=90;
 		this.ball.stop();
 		 if (this.teamA.score>this.teamB.score) {
 		 		this.winner=this.teamA;
@@ -302,8 +302,6 @@ class Game{
 
 		}
 
-		//this.ball.xPos=this.field.midx;
-		//this.ball.yPos=this.field.midy;
 
 	}
 	restartGameFromGoalKick(){
@@ -351,7 +349,10 @@ class Game{
 				this.setTeamsToPlay();
 				console.log("start playing now");
 				this.setState("PLAY");
-			};
+			}
+			else{
+				this.cumulativeTimeDelay=millis();
+			}
 
 	}
 
@@ -367,11 +368,8 @@ class Game{
 			this.restartGameFromCorner();
 		}
 	
-		else if (this.state=="HALF TIME") {
-			this.teamA.moveToKickOffPosition();
-
-		}
-		else if (this.state=="GOAL"||this.state=="KICKOFF") {
+	
+		else if (this.state=="GOAL"||this.state=="KICKOFF"||this.state=="HALF TIME") {
 			this.restartGameFromKickOff();
 			
 		}
@@ -407,24 +405,31 @@ class Game{
 			}
 	}
 	updateState(){
-		if (this.goalScored()) {
+		if(!this.isFullTime()){
+			if (this.goalScored()) {
 			this.state="GOAL";
 		};
-		if (this.isCorner()) {
-			this.state="CORNER";
-		};
-		if (this.isGoalKick()) {
-			this.state="GOALKICK";
-		};
-		if (this.isHalfTime()) {
-			this.state="HALF TIME";
-		};
-		if (this.isFullTime()) {
+			if (this.isCorner()) {
+				this.state="CORNER";
+			};
+			if (this.isGoalKick()) {
+				this.state="GOALKICK";
+			};
+			if (this.isHalfTime()) {
+				this.state="HALF TIME";
+			};
+			if (this.isFullTime()) {
+				this.state="FULL TIME";
+			};
+			if (this.isThrowing()) {
+				this.state="THROWING";
+			};
+
+		}
+		
+		else{
 			this.state="FULL TIME";
-		};
-		if (this.isThrowing()) {
-			this.state="THROWING";
-		};
+		} 
 		
 
 	}

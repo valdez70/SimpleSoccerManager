@@ -1,7 +1,7 @@
 var allowedCommands=["attack","defend"];
 var mySound;
 var game;
-var latestCommand="Say team [x]; x=attack/defend/you're awesome... etc";
+var latestCommand="Say 'team [x]'; x='attack','defend','you're awesome'... etc";
 
 function preload(){
 	mySound = loadSound('data/punch.mp3');
@@ -17,9 +17,7 @@ function setup() {
 
 		
 		game=new Game(width/5,height/5,3*width/5,3*height/5);
-  		//myRec.onResult = parseResult; // recognition callback
   		if (annyang) {
-  // Let's define our first command. First the text we expect, and then the function it should call
 		 var commands = {
   		'team *command': parseResult};
   	}
@@ -27,10 +25,16 @@ function setup() {
   		console.log("no annyang");
   	}
 
-  // Add our commands to annyang
+ 
   annyang.addCommands(commands);
+  annyang.addCallback('result',function(userSaid){
 
-  // Start listening. You can call this here, or attach this call to an event, button, etc.
+  	console.log(userSaid);
+  	latestCommand=userSaid[0];
+  	//console.log(commandText);
+  	//console.log(phrases);
+
+  });
   annyang.start();
 
   for (var i = game.allPlayers.length - 1; i >= 0; i--) {
@@ -41,29 +45,20 @@ function setup() {
 	
 
 	function draw() {
-
-
 		background(255); 
-
 		game.stateMachine();
 		displayLatestCommand();
 		showTeamMorales();
-		
-		//field.teamA.players[0].mark(field.teamA.players[10]);
-
+		//console.log(game.field.lastPlayerInPossession.position||true);
 	}
 
 
 	function windowResized(){
 		resizeCanvas(windowWidth, windowHeight);
-		// game.field=new Field(width/5,height/5,3*width/5,3*height/5);
 		game.field._width=3*width/5;
 		game.field._length=3*height/5;
 		game.field.xPos=width/5;
 		game.field.yPos=height/5;
-
-
-  	//redraw();
   }
 
   
@@ -71,10 +66,8 @@ function setup() {
 
   function parseResult(term)
   {
-		// recognition system will often append words into phrases.
-		// so hack here is to only use the last word:
 		
-		latestCommand=term;
+		latestCommand='team '+term;
 		if (allowedCommands.indexOf(term)!=-1) {
 			game.teamA.objectives[0]=latestCommand;
 
@@ -82,12 +75,6 @@ function setup() {
 		else{
 			getSentiment(term);
 		}
-		
-		//console.log(term);
-
-		
-
-
 
 	}
 
@@ -97,7 +84,6 @@ function setup() {
 
 		push();
 		fill(255);
-		//rectMode(CENTER);
 		rect(width/2-width/6,height/20-height/40,width/3,height/20);
 		fill(127,127,130);
 		textSize(width/80);
@@ -121,10 +107,10 @@ function setup() {
 			moraleWeighted=map(morale,0,1,0,statWidth);
 			fill(128,128,128);
 			rect(xPos,currHeight,statWidth,statHeight-5);
-			if (morale<0.25) {
+			if (morale<=0.25) {
 				fill(255,0,0);
 			}
-			if (morale>0.25&&morale<0.75) {
+			else if (morale>0.25&&morale<0.75) {
 				fill(255,255,0);
 			}
 			else{
@@ -142,10 +128,6 @@ function setup() {
 		pop();
 	}
 
-	// function mousePressed(){
-	// 	var fs=fullScreen();
-	// 	fullScreen(!fs);
-	// }
 
 	function getSentiment(command){
 		var searchTermSend = encodeURIComponent(command);
