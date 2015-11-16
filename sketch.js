@@ -69,7 +69,7 @@ function setup() {
 		
 		latestCommand='team '+term;
 		if (allowedCommands.indexOf(term)!=-1) {
-			game.teamA.objectives[0]=latestCommand;
+			game.teamA.objectives[0]=term;
 
 		}
 		else{

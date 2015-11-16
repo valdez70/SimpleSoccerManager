@@ -137,12 +137,9 @@ class Game{
 	isRightCorner(){
 		return this.ball.xPos<this.field.xPos && this.lastPlayerInPossession.side=="left";		
 	}
-	isLeftThrowing(){
-		return this.ball.yPos<this.field.yPos || this.ball.yPos>this.field.yPos+this.field._width;
 
-	}
 	isThrowing(){
-		return this.ball.yPos<this.field.yPos || this.ball.yPos>this.field.yPos+this.field._width;
+		return this.ball.yPos<this.field.yPos || this.ball.yPos>this.field.yPos+this.field._length;
 	}
 	isRightThrowing(){
 		return this.isThrowing() && this.lastPlayerInPossession.side=="left";
@@ -180,27 +177,7 @@ class Game{
 
 	}
 
-	goalAnimation(){
-		
-			push();
-			textSize(this.field._width/30);
-			fill(255);
-			text("GOAL",this.field.xPos,this.field.yPos);
-			this.ball.stop();
-			for (var i = this.allPlayers.length - 1; i >= 0; i--) {
-				this.allPlayers[i].stop();
-			};
-			pop();
-			this.ball.xPos=this.field.midx;
-			this.ball.yPos=this.field.midy;
-			for (var i = this.allPlayers.length - 1; i >= 0; i--) {
-				this.allPlayers[i].setInDefaultPosition();
-				this.allPlayers[i].stop();
-			};
-			
-			this.ball.stop();
-		
-	}
+
 
 	end(){
 		this.setTeamsToNeutral();
