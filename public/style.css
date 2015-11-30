@@ -1,0 +1,116 @@
+#title{
+	display: block;
+	color: #000;
+	width: 50%;
+	margin-left: 5% auto;
+	border: 3px solid #FFFFFF;
+
+	
+	}
+
+.title{
+	display: block;
+	width: 100%;
+	background: #F44336;
+
+}
+
+.callToAction{
+	background: #FFEB3B;
+	color: white;
+	width: 40%;
+	font-size: 20px;
+	padding:5%;
+	float: right;
+
+
+}
+#callToAction{
+	width: 80%;
+	margin: 10% auto;
+	border: 3px solid #FFFFFF;
+	padding: 5%;
+
+}
+
+.selectTeam{
+	display: block;
+	background: #4CAF50;
+	color: white;
+	width: 40%;
+	font-size: 20px;
+	padding:5%;
+	float: left;
+
+}
+#selectTeam{
+	width: 80%;
+	margin: 10% auto;
+	border: 3px solid #FFFFFF;
+	padding: 5%;
+
+}
+
+.selectFormation{
+	display: block;
+	background: #F44336;
+	color: white;
+	width: 40%;
+	font-size: 20px;
+	padding:5%;
+	float: left;
+
+}
+#selectFormation{
+	width: 80%;
+	margin: 10% auto;
+	border: 3px solid #FFFFFF;
+	padding: 5%;
+
+
+}
+
+.learnCommands{
+	display: block;
+	background: #29B6F6;
+	color: white;
+	width: 40%;
+	font-size: 20px;
+	padding:5%;
+	float: left;
+
+}
+#learnCommands{
+	width: 80%;
+	margin: 10% auto;
+	border: 3px solid #FFFFFF;
+	padding: 5%;
+
+
+}
+
+
+body{
+	font-family: 'Open Sans', serif;
+	background: #F44336;
+	background: white;
+	color: black;
+	/*background: #29B6F6;*/
+}
+
+
+
+
+
+
+a{
+	text-decoration: none;
+}
+
+
+#start-button{
+	display: block;
+	width: 100%
+	margin: 50px auto;
+
+}
